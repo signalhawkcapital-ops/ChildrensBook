@@ -1,155 +1,226 @@
-# Deployment Guide — GitHub + Render
+# Deployment Guide — Render Web Service
 
-This site is a fully static site (HTML, CSS, vanilla JS). No build step, no server, no environment variables. Deployment takes about 5 minutes.
+This guide deploys StorySpark as a **Web Service** on Render, using a small Express server. This is the right choice if you plan to add a real LLM generation endpoint later (V2 in the roadmap), since you'll already have the server scaffolding in place.
+
+If you'd rather deploy as a Static Site (no server, slightly simpler), see the bottom of this doc.
+
+---
+
+## What's in the repo
+
+```
+storyspark/
+├── index.html, styles.css, app.js   # the frontend (unchanged)
+├── server.js                        # tiny Express server
+├── package.json                     # Node dependencies + start script
+├── render.yaml                      # Render Blueprint (optional but nice)
+├── README.md
+└── docs/
+```
+
+The server does three things:
+1. Serves the static files (`index.html`, `styles.css`, `app.js`)
+2. Exposes `/healthz` so Render knows the service is alive
+3. Has a stub `/api/generate` endpoint, ready for V2 (real LLM generation)
 
 ---
 
 ## Step 1 — Push to GitHub
 
-If you haven't already, create a new GitHub repo. From the project folder:
+From inside the project folder:
 
 ```bash
-# Initialize the repo
 git init
 git add .
-git commit -m "Initial commit — StorySpark MVP"
+git commit -m "Initial commit"
+```
 
-# Create a repo on github.com/new (e.g. "storyspark"), then:
+Create an empty repo at [github.com/new](https://github.com/new), then:
+
+```bash
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/storyspark.git
 git push -u origin main
 ```
 
-The repo should look like this on GitHub:
+---
 
-```
-storyspark/
-├── README.md
-├── index.html
-├── styles.css
-├── app.js
-└── docs/
-    ├── MARKETING.md
-    ├── MONETIZATION.md
-    ├── MRR_ESTIMATIONS.md
-    ├── DEPLOYMENT.md
-    └── PRODUCT_ROADMAP.md
-```
+## Step 2 — Create the Web Service on Render
+
+1. Go to [render.com](https://render.com) and sign in with GitHub.
+2. Click **New +** → **Web Service**.
+3. Find your `storyspark` repo and click **Connect**.
+4. Fill in the configuration:
+
+| Field | Value |
+|---|---|
+| **Name** | `storyspark` (becomes your subdomain) |
+| **Region** | Pick the one closest to your users (Oregon, Frankfurt, Singapore, Ohio) |
+| **Branch** | `main` |
+| **Root Directory** | *leave blank* |
+| **Runtime** | `Node` |
+| **Build Command** | `npm install` |
+| **Start Command** | `npm start` |
+| **Plan** | `Free` to start (upgrade later) |
+
+5. Expand **Advanced** and set:
+   - **Health Check Path**: `/healthz`
+   - **Auto-Deploy**: `Yes`
+   - **Environment Variables**: Add `NODE_ENV` = `production`
+
+6. Click **Create Web Service**.
 
 ---
 
-## Step 2 — Connect to Render
+## Step 2 (alternative) — Deploy via render.yaml Blueprint
 
-1. Go to **[render.com](https://render.com)** and sign in (free tier works fine for this).
-2. Click **New +** → **Static Site**.
-3. Connect your GitHub account if you haven't, and select the `storyspark` repo.
-4. Configure the deployment:
+If you'd rather have all that config in code, the repo already includes a `render.yaml`. Instead of the manual steps:
 
-   | Field | Value |
-   |---|---|
-   | **Name** | `storyspark` (or whatever you want — becomes your URL) |
-   | **Branch** | `main` |
-   | **Root directory** | *(leave blank)* |
-   | **Build command** | *(leave blank — no build step)* |
-   | **Publish directory** | `.` (just a single dot — the repo root) |
+1. Go to **New +** → **Blueprint**
+2. Connect the `storyspark` repo
+3. Render reads `render.yaml` and configures everything automatically
+4. Click **Apply**
 
-5. Click **Create Static Site**.
-
-Render will deploy it in ~30 seconds. You'll get a URL like `https://storyspark.onrender.com`.
+This is the better long-term choice — your deploy config is version-controlled.
 
 ---
 
-## Step 3 — Custom domain (optional)
+## Step 3 — Wait for the build
 
-Once you have a real domain (e.g. `storyspark.co`):
+Render will:
+1. Clone the repo
+2. Run `npm install` (takes ~30 seconds)
+3. Run `npm start`
+4. Hit `/healthz` to confirm the service responds
+5. Mark the deploy as Live
 
-1. In Render, open your site's dashboard → **Settings** → **Custom Domains** → **Add Custom Domain**.
-2. Enter your domain. Render gives you DNS records.
-3. Add the records in your domain registrar (Namecheap, Cloudflare, GoDaddy, etc.):
-   - Apex (`storyspark.co`): an `A` record pointing to Render's IP
-   - `www` subdomain: a `CNAME` to `storyspark.onrender.com`
-4. Wait 5–60 min for DNS propagation. Render auto-issues an SSL cert.
+You'll see logs streaming in the dashboard. When you see `StorySpark running on port 10000` (or similar), it's up.
+
+Your URL will be `https://storyspark.onrender.com` (or whatever name you chose).
 
 ---
 
-## Step 4 — Auto-deploy on push
+## Step 4 — Verify it works
 
-Render is already set up for this. **Every push to `main` automatically redeploys.** That's it.
-
-For more control, work in branches and only merge to `main` when ready:
+Visit your URL in a browser — you should see the homepage. Then test the endpoints from your terminal:
 
 ```bash
-git checkout -b feature/new-theme
-# ...make changes
-git push origin feature/new-theme
-# open a PR on GitHub, merge when ready → auto-deploys
+# Health check
+curl https://storyspark.onrender.com/healthz
+# → {"status":"ok","uptime":42.123}
+
+# API stub
+curl -X POST https://storyspark.onrender.com/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"heroName":"Maya","theme":"Magical forest adventure","outcome":"Learns to be brave"}'
+# → {"message":"Server is running...","received":{...}}
 ```
 
 ---
 
-## Step 5 — Environment-aware code (when you add a backend)
+## Step 5 — Auto-deploy is on
 
-When the MVP graduates to using a real LLM (see `PRODUCT_ROADMAP.md`), you'll add a backend. Two options:
+Every push to `main` triggers a redeploy. To test:
 
-### Option A — Render Web Service (recommended)
+```bash
+# any change
+git add .
+git commit -m "Update copy"
+git push
+```
 
-Add a Node.js / Python backend in a `server/` folder. In Render:
+Watch the Render dashboard — a new deploy starts within seconds.
 
-1. **New +** → **Web Service** → same repo
-2. Root directory: `server`
-3. Build command: `npm install`
-4. Start command: `node index.js`
-5. Add env vars: `ANTHROPIC_API_KEY`, `STRIPE_SECRET_KEY`, etc.
+---
 
-The frontend stays as-is and calls `https://storyspark-api.onrender.com/generate`.
+## Important: The Free plan sleeps
 
-### Option B — Render Static Site + Cloudflare Workers / Vercel Functions
+Render's free Web Service plan **spins down after 15 minutes of inactivity**. The next request takes ~30–60 seconds to wake the service back up. This is fine for development but bad for real traffic.
 
-Keep Render for the static site, host the API elsewhere. This is what you'd do if you want to keep your generation endpoint on a different infra (e.g., for cost reasons).
+The fix: upgrade to the **Starter plan ($7/month)** before launching. The service stays warm 24/7 and you also get:
+- Faster builds
+- More CPU/memory
+- Custom domain priority
+
+If you want to stay free temporarily, you can use a service like UptimeRobot to ping `/healthz` every 10 minutes — but at that point the $7 is honestly cheaper than the workaround complexity.
+
+---
+
+## Step 6 (optional) — Custom domain
+
+In your service's dashboard:
+
+1. **Settings** → **Custom Domains** → **Add Custom Domain**
+2. Enter your domain (e.g., `storyspark.co`)
+3. Render gives you DNS records to add at your registrar:
+   - **A record** for the apex pointing to Render's IP
+   - **CNAME** for `www` pointing to `storyspark.onrender.com`
+4. Wait 5–60 minutes for DNS. Render auto-issues SSL.
+
+Verify with `dig storyspark.co +short`.
+
+---
+
+## When you add the LLM (V2)
+
+The server is ready for it. When you're ready:
+
+1. Get an Anthropic API key from [console.anthropic.com](https://console.anthropic.com)
+2. In Render dashboard: **Environment** → **Add Environment Variable**
+   - Key: `ANTHROPIC_API_KEY`
+   - Value: your key
+   - Mark it as a **secret** (Render encrypts it)
+3. In `server.js`, replace the `/api/generate` stub body with a real call to the Anthropic SDK
+4. In `app.js`, replace the local `buildStory()` call with `fetch('/api/generate', ...)`
+5. Push to main → auto-deploys
+
+The frontend UI doesn't change at all. Only the data source.
 
 ---
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---|---|
-| Site loads but fonts don't | Check the `<link>` to Google Fonts in `index.html` is intact. |
-| Form submits but nothing happens | Open dev tools → Console. Almost always a JS error in `app.js`. |
-| Render build fails | Make sure publish directory is `.` (a single dot), not blank or `/`. |
-| Custom domain not resolving | Verify DNS with `dig storyspark.co +short` — should return Render's IP. Wait longer if needed. |
-| Static assets 404 on a custom path | Render serves from publish directory root — keep paths relative (no leading `/` in your HTML). |
+**Build fails: "Cannot find module 'express'"**
+Your `package.json` is missing or malformed. Verify it's at the repo root and contains the `dependencies` block.
+
+**Build succeeds but service crashes on start**
+Check the logs in the Render dashboard. Most often: a typo in `server.js` or you forgot to `git push` `package.json`.
+
+**Service is up but the site is blank**
+Verify `index.html`, `styles.css`, and `app.js` are at the repo root (not nested in a folder). The server serves files from `__dirname`, which is the repo root.
+
+**Health check fails repeatedly**
+The service started but `/healthz` isn't responding. Either the route is missing in `server.js`, or the service crashed silently — check logs.
+
+**Custom domain shows "Not Secure"**
+Wait 10 more minutes after DNS verifies. Render provisions SSL after the domain resolves.
+
+**Cold-start is slow on free plan**
+This is the 15-minute sleep behavior described above. Upgrade to Starter ($7/mo) to fix permanently.
 
 ---
 
-## Cost
+## Cost summary
 
-- **Render free tier**: covers this static site indefinitely. 100 GB bandwidth/month.
-- **Render Starter** ($7/mo): adds custom domain priority + faster builds. Worth it once you're earning money.
-- **Render Pro** ($25/mo): unnecessary for a static site. Only consider when you add backends.
+| Plan | Cost | Best for |
+|---|---|---|
+| Free | $0 | Dev/staging, demos. Sleeps after 15 min idle. |
+| Starter | $7/mo | Real traffic. Always on, faster builds. |
+| Standard | $25/mo | More CPU/RAM. Probably overkill for this site for a long time. |
 
----
-
-## Backups
-
-Your site lives in two places automatically:
-
-1. **GitHub** — full source history
-2. **Render** — last successful deploy
-
-If Render ever has an outage or you want to migrate, you can deploy to **Cloudflare Pages**, **Netlify**, or **Vercel** in minutes — they all support the same workflow (GitHub → static site, no build).
+For a launching product, **Starter** is the right answer. You're already making money on the first hardcover sale of the month.
 
 ---
 
-## Going live checklist
+## Alternative: Deploy as a Static Site instead
 
-- [ ] Custom domain configured + SSL active
-- [ ] Favicon added (drop a `favicon.ico` in the root)
-- [ ] OG image for link previews (`og-image.png`, 1200×630)
-- [ ] Meta tags for Twitter / OG (description already set; add image tag)
-- [ ] Plausible or PostHog analytics installed
-- [ ] Stripe Checkout pages connected (when ready to take payments)
-- [ ] Privacy policy + terms pages added (Termly.io generates these for free)
-- [ ] Test on mobile (real device, not just dev tools)
-- [ ] Test the form with edge-case inputs (emoji names, long text, etc.)
+If you don't need the server (yet) and want zero maintenance:
 
-You're live.
+1. **New +** → **Static Site** instead of Web Service
+2. Build command: *blank*
+3. Publish directory: `.`
+4. The Static Site plan is **free forever, never sleeps, no upgrade needed** — but you can't add backend endpoints.
+
+Choose Web Service if you're planning V2 (LLM generation) within a few months. Choose Static Site if you want to validate demand first with the template-based MVP.
+
+You can switch from Static Site to Web Service later by deleting and recreating the Render service — your repo doesn't need to change (the `server.js` and `package.json` just get ignored on the Static Site path).

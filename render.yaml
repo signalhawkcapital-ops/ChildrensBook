@@ -1,0 +1,22 @@
+# Render Blueprint — defines the service in code.
+# Optional: you can also configure these settings in the Render dashboard.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: storyspark
+    runtime: node
+    plan: free
+    region: oregon            # change if you prefer frankfurt, singapore, ohio, etc.
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # When you add LLM generation, uncomment and set in the Render dashboard
+      # (never commit secrets to git):
+      # - key: ANTHROPIC_API_KEY
+      #   sync: false
