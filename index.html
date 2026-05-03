@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StorySpark — Custom Children's Books, Made for Your Little One</title>
+  <meta name="description" content="Generate beautifully illustrated, personalized children's books in seconds. Pick a hero, a theme, and a happy ending — we'll do the rest." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,500&family=Caveat:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Decorative background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+        <path d="M16 2 L19 12 L29 13 L21 20 L24 30 L16 24 L8 30 L11 20 L3 13 L13 12 Z" fill="currentColor"/>
+      </svg>
+      <span>StorySpark</span>
+    </a>
+    <nav class="nav">
+      <a href="#create">Create</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#shop">Shop</a>
+    </nav>
+    <a href="#create" class="btn btn-mini">Make a book</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <span class="eyebrow">✨ Personalized children's books ✨</span>
+      <h1>
+        Once upon a time, <span class="hero-script">your child</span><br />
+        became the hero of their own story.
+      </h1>
+      <p class="hero-sub">
+        Tell us a few things about the little reader in your life. In under a minute, we'll spark a fully illustrated picture book starring them — with friends, adventures, and a happily-ever-after of your choosing.
+      </p>
+      <div class="hero-ctas">
+        <a href="#create" class="btn btn-primary">Create a book — free preview</a>
+        <a href="#how" class="btn btn-ghost">See how it works →</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>4.9★</strong><span>from 2,400+ parents</span></div>
+        <div><strong>60s</strong><span>to a finished book</span></div>
+        <div><strong>12 pages</strong><span>of pure magic</span></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bookGrad" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ff8a5b"/>
+            <stop offset="1" stop-color="#e85d75"/>
+          </linearGradient>
+          <linearGradient id="pageGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#fff7ec"/>
+            <stop offset="1" stop-color="#ffe9d0"/>
+          </linearGradient>
+        </defs>
+        <!-- Floating stars -->
+        <g class="float-1">
+          <path d="M70 60 L74 72 L86 74 L77 82 L80 94 L70 87 L60 94 L63 82 L54 74 L66 72 Z" fill="#ffd166"/>
+        </g>
+        <g class="float-2">
+          <circle cx="340" cy="80" r="8" fill="#7ec4cf"/>
+        </g>
+        <g class="float-3">
+          <path d="M350 380 L353 388 L361 389 L355 394 L357 402 L350 397 L343 402 L345 394 L339 389 L347 388 Z" fill="#ff8a5b"/>
+        </g>
+        <!-- Book base shadow -->
+        <ellipse cx="200" cy="430" rx="160" ry="14" fill="#1a1a2e" opacity="0.12"/>
+        <!-- Book cover -->
+        <rect x="60" y="80" width="280" height="340" rx="14" fill="url(#bookGrad)"/>
+        <rect x="60" y="80" width="14" height="340" rx="4" fill="#1a1a2e" opacity="0.18"/>
+        <!-- Inner page -->
+        <rect x="86" y="100" width="240" height="300" rx="8" fill="url(#pageGrad)"/>
+        <!-- Illustration on page: hero kid with star -->
+        <circle cx="206" cy="200" r="36" fill="#ffd9b3"/>
+        <circle cx="194" cy="195" r="3" fill="#1a1a2e"/>
+        <circle cx="218" cy="195" r="3" fill="#1a1a2e"/>
+        <path d="M198 210 Q206 218 214 210" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M170 175 Q206 145 242 175 L240 195 Q206 175 172 195 Z" fill="#5b3a29"/>
+        <rect x="180" y="240" width="52" height="60" rx="8" fill="#7ec4cf"/>
+        <rect x="170" y="240" width="20" height="40" rx="6" fill="#7ec4cf"/>
+        <rect x="222" y="240" width="20" height="40" rx="6" fill="#7ec4cf"/>
+        <!-- Title text -->
+        <text x="206" y="350" text-anchor="middle" font-family="Fraunces, serif" font-weight="800" font-size="22" fill="#3a2618">The Brave</text>
+        <text x="206" y="375" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="26" fill="#e85d75">little Star</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- CREATE / GENERATOR -->
+  <section id="create" class="create">
+    <div class="section-head">
+      <span class="kicker">— Step into the studio —</span>
+      <h2>Build your one-of-a-kind story</h2>
+      <p>Fill in the details below. The more you share, the more magical it gets.</p>
+    </div>
+
+    <div class="generator">
+      <form id="bookForm" class="form-card">
+        <div class="field">
+          <label for="heroName">Main character's name<span class="req">*</span></label>
+          <input id="heroName" name="heroName" type="text" required placeholder="e.g. Maya" maxlength="30" />
+          <small>The brave little hero of our tale.</small>
+        </div>
+
+        <div class="field">
+          <label for="heroAge">Age (helps us tune the words)</label>
+          <select id="heroAge" name="heroAge">
+            <option value="3-5">Ages 3–5 (gentle, simple)</option>
+            <option value="5-8" selected>Ages 5–8 (classic picture book)</option>
+            <option value="8-10">Ages 8–10 (longer, richer)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="supportingCast">Supporting cast</label>
+          <input id="supportingCast" name="supportingCast" type="text" placeholder="e.g. Grandpa Joe, a sleepy turtle named Pip" maxlength="120" />
+          <small>Friends, family, pets — separate with commas.</small>
+        </div>
+
+        <div class="field">
+          <label for="interests">Interests &amp; favorite things</label>
+          <input id="interests" name="interests" type="text" placeholder="e.g. dinosaurs, painting, the color teal" maxlength="120" />
+          <small>We'll weave these into the adventure.</small>
+        </div>
+
+        <div class="field">
+          <label for="theme">Theme<span class="req">*</span></label>
+          <select id="theme" name="theme" required>
+            <option value="" disabled selected>Pick a theme…</option>
+            <option>Bedtime &amp; the moon</option>
+            <option>Magical forest adventure</option>
+            <option>Underwater journey</option>
+            <option>Outer space exploration</option>
+            <option>First day of school</option>
+            <option>Making a new friend</option>
+            <option>Big sibling / new baby</option>
+            <option>Overcoming a fear</option>
+            <option>Birthday quest</option>
+            <option>Holiday / seasonal</option>
+            <option value="other">Other (I'll write my own)</option>
+          </select>
+        </div>
+        <div class="field theme-other" id="themeOtherWrap" style="display:none;">
+          <label for="themeOther">Describe your theme</label>
+          <input id="themeOther" name="themeOther" type="text" placeholder="e.g. learning to ride a bike at the beach" maxlength="120" />
+        </div>
+
+        <div class="field">
+          <label for="outcome">Ending / lesson<span class="req">*</span></label>
+          <select id="outcome" name="outcome" required>
+            <option value="" disabled selected>Pick a happy ending…</option>
+            <option>Learns to be brave</option>
+            <option>Discovers the value of kindness</option>
+            <option>Makes a lasting friendship</option>
+            <option>Finds confidence in being themselves</option>
+            <option>Solves a clever puzzle</option>
+            <option>Falls peacefully asleep</option>
+            <option>Realizes home is the best place</option>
+            <option>Celebrates with everyone they love</option>
+            <option value="other">Other (custom ending)</option>
+          </select>
+        </div>
+        <div class="field outcome-other" id="outcomeOtherWrap" style="display:none;">
+          <label for="outcomeOther">Describe the ending you'd like</label>
+          <input id="outcomeOther" name="outcomeOther" type="text" placeholder="e.g. learns that mistakes are how we grow" maxlength="120" />
+        </div>
+
+        <div class="field field-row">
+          <label class="checkbox">
+            <input type="checkbox" id="dedication" />
+            <span>Add a personal dedication page</span>
+          </label>
+        </div>
+        <div class="field" id="dedicationWrap" style="display:none;">
+          <label for="dedicationText">Dedication</label>
+          <input id="dedicationText" name="dedicationText" type="text" placeholder="e.g. For Maya, with all our love — Mom &amp; Dad" maxlength="120" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">
+          <span class="btn-label">Spark my story</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+        <p class="form-foot">Free preview • No signup • Ready in seconds</p>
+      </form>
+
+      <!-- Book preview -->
+      <div class="preview" id="preview" aria-live="polite">
+        <div class="preview-empty">
+          <svg viewBox="0 0 120 120" width="80" height="80" aria-hidden="true">
+            <path d="M60 14 L70 46 L104 48 L78 68 L86 100 L60 82 L34 100 L42 68 L16 48 L50 46 Z" fill="#ffd166" opacity="0.85"/>
+          </svg>
+          <p>Your book will appear here, page by page.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="how">
+    <div class="section-head">
+      <span class="kicker">— How the magic happens —</span>
+      <h2>Three steps. One unforgettable keepsake.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>You share the spark</h3>
+        <p>A name, a few favorite things, the kind of ending you want. That's it.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>We craft the story</h3>
+        <p>Our writers and illustrators (with a little AI help) shape a 12-page book made just for them.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Read tonight, treasure forever</h3>
+        <p>Download the digital edition instantly, or order a hardcover printed on premium paper.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="pricing">
+    <div class="section-head">
+      <span class="kicker">— Choose your edition —</span>
+      <h2>Stories for every shelf</h2>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-tag">Digital</div>
+        <h3>Storybook PDF</h3>
+        <div class="price"><span class="amt">$9</span><span class="per">/ book</span></div>
+        <ul>
+          <li>12-page illustrated PDF</li>
+          <li>Print at home, read on tablet</li>
+          <li>Instant delivery</li>
+          <li>Personal dedication page</li>
+        </ul>
+        <a href="#create" class="btn btn-secondary">Start digital</a>
+      </div>
+      <div class="plan plan-feature">
+        <div class="plan-tag plan-tag-hot">Most loved</div>
+        <h3>Hardcover Keepsake</h3>
+        <div class="price"><span class="amt">$34</span><span class="per">/ book</span></div>
+        <ul>
+          <li>Premium hardcover, matte finish</li>
+          <li>Acid-free archival paper</li>
+          <li>Ships worldwide in 5–7 days</li>
+          <li>Includes digital copy</li>
+        </ul>
+        <a href="#create" class="btn btn-primary">Order hardcover</a>
+      </div>
+      <div class="plan">
+        <div class="plan-tag">Subscription</div>
+        <h3>Spark Club</h3>
+        <div class="price"><span class="amt">$19</span><span class="per">/ month</span></div>
+        <ul>
+          <li>One new digital book monthly</li>
+          <li>20% off all hardcovers</li>
+          <li>Early access to new themes</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="#create" class="btn btn-secondary">Join the club</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP / TESTIMONIALS -->
+  <section id="shop" class="shop">
+    <div class="section-head">
+      <span class="kicker">— Loved by little readers —</span>
+      <h2>Bedtime, but make it unforgettable</h2>
+    </div>
+    <div class="testimonials">
+      <figure class="quote">
+        <blockquote>"My daughter has asked for her StorySpark book every single night for a month. Worth every penny."</blockquote>
+        <figcaption>— Priya, mom of one</figcaption>
+      </figure>
+      <figure class="quote">
+        <blockquote>"The illustrations are gorgeous and the story actually felt like ours. Made me tear up at the dedication page."</blockquote>
+        <figcaption>— Marcus, dad of twins</figcaption>
+      </figure>
+      <figure class="quote">
+        <blockquote>"Gave one to my nephew for his birthday. His parents called me crying. Best gift I've ever given."</blockquote>
+        <figcaption>— Jess, very proud aunt</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="logo logo-foot">
+          <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+            <path d="M16 2 L19 12 L29 13 L21 20 L24 30 L16 24 L8 30 L11 20 L3 13 L13 12 Z" fill="currentColor"/>
+          </svg>
+          <span>StorySpark</span>
+        </div>
+        <p class="footer-tag">Personalized children's books, made with love.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <h4>Product</h4>
+          <a href="#create">Create a book</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#how">How it works</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Contact</a>
+        </div>
+        <div>
+          <h4>Help</h4>
+          <a href="#">FAQ</a>
+          <a href="#">Shipping</a>
+          <a href="#">Returns</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 StorySpark. Stories made with crayons and code.</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
